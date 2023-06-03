@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Visits Counter</title>
+    <script src="https://www.gstatic.com/firebasejs/8.4.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.4.1/firebase-database.js"></script>
+</head>
+<body>
+    <h1>Website Visit Count</h1>
+    <p>Website Visit Count: <span id="visitCount">Loading...</p>
+
+    <script>
+        // Initialize Firebase
+        var firebaseConfig = {
+            // Replace with your Firebase project configuration
+            // You really only need the apiKey and databaseURL
+            apiKey: "YOUR APIKEY",
+            authDomain: "YOUR AUTHDOMAIN",
+            databaseURL: "YOUR DATABASEURL",
+            projectId: "YOUR PROJECTID",
+            storageBucket: "YOUR STORAGEBUCKET",
+            messagingSenderId: "YOUR MESSAGINGSENDERID",
+            appId: "YOUR APPID",
+            measurementId: "YOUR MEASUREMENTID"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+
+        // Get a reference to the visits count in the Firebase database
+        var visitsRef = firebase.database().ref('visits');
+
+        // Increment and display the visit count
+        visitsRef.transaction(function (currentCount) {
+            return (currentCount || 0) + 1;
+        }, function (error, committed, snapshot) {
+            if (error) {
+                console.log('Transaction failed abnormally!', error);
+            } else {
+                console.log('Visit count incremented.');
+                var visitCount = snapshot.val();
+                document.getElementById('visitCount').innerText = visitCount;
+            }
+        });
+    </script>
+</body>
+</html>
