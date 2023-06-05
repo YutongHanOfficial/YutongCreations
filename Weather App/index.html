@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Weather App</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+      text-align: center;
+    }
+    
+    h1 {
+      margin-bottom: 20px;
+    }
+    
+    input[type="text"] {
+      padding: 10px;
+      width: 200px;
+      font-size: 16px;
+    }
+    
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+    }
+    
+    #weather {
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Weather App</h1>
+  <input type="text" id="zipCodeInput" placeholder="Enter ZIP code">
+  <button onclick="getWeather()">Get Weather</button>
+  <div id="weather"></div>
+
+  <script>
+    function getWeather() {
+      var zipCode = document.getElementById("zipCodeInput").value;
+      var apiKey = ""; // Replace with your API key (you have to create an account: https://openweathermap.org)
+      
+      // Make a request to the weather API
+      var xhr = new XMLHttpRequest();
+      xhr.open("GET", "https://api.openweathermap.org/data/2.5/weather?zip=" + zipCode + "&appid=" + apiKey, true);
+      xhr.onload = function() {
+        if (xhr.status === 200) {
+          var weatherData = JSON.parse(xhr.responseText);
+          displayWeather(weatherData);
+        } else {
+          console.log("Request failed.  Returned status of " + xhr.status);
+        }
+      };
+      xhr.send();
+    }
+
+    function displayWeather(weatherData) {
+      var weatherDiv = document.getElementById("weather");
+      var temperature = Math.round(weatherData.main.temp - 273.15);
+      var description = weatherData.weather[0].description;
+      var city = weatherData.name;
+      var country = weatherData.sys.country;
+
+      weatherDiv.innerHTML = "<p><strong>Location:</strong> " + city + ", " + country + "</p>" +
+                             "<p><strong>Temperature:</strong> " + temperature + "°C</p>" +
+                             "<p><strong>Description:</strong> " + description + "</p>";
+    }
+  </script>
+</body>
+</html>
